@@ -4,15 +4,15 @@
 !.env.example
 
 # Backend
-BE/.env
-BE/node_modules/
-BE/vendor/
+simap-backend/.env
+simap-backend/node_modules/
+simap-backend/vendor/
 
 # Frontend
-FE/.env
-FE/node_modules/
-FE/dist/
-FE/build/
+simap-frontend/.env
+simap-frontend/node_modules/
+simap-frontend/dist/
+simap-frontend/build/
 
 # Dependencies
 node_modules/
