@@ -1,4 +1,4 @@
-// Helper Suara Beep & Web Speech API
+// Helper Suara Beep
 
 interface WindowWithWebkitAudio extends Window {
   webkitAudioContext?: typeof AudioContext;
@@ -40,21 +40,9 @@ function playTone(
 }
 
 export const playSuccessBeep = (): void => {
-  playTone('sine', 800, 0.1, 0.15);
+  playTone('sine', 800, 1.0, 0.15);
 };
 
 export const playErrorBeep = (): void => {
-  playTone('sawtooth', 300, 0.15, 0.25);
-};
-
-export const speakText = (text: string, useVoice: boolean): void => {
-  if (!useVoice || typeof window === 'undefined' || !('speechSynthesis' in window)) return;
-
-  window.speechSynthesis.cancel();
-  const utterance = new SpeechSynthesisUtterance(text);
-  utterance.lang = 'id-ID';
-  utterance.rate = 1.0;
-  utterance.pitch = 1.0;
-
-  window.speechSynthesis.speak(utterance);
+  playTone('sawtooth', 300, 1.0, 0.25);
 };

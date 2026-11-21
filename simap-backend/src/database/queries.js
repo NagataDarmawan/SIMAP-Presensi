@@ -28,7 +28,7 @@ const authQueries = {
     UPDATE users
     SET password = ?, updated_at = CURRENT_TIMESTAMP
     WHERE id = ?
-  `
+  `,
 };
 
 // 2. MODUL MANAJEMEN PEGAWAI (Tabel: pegawai JOIN jadwal_kerja)
@@ -124,7 +124,7 @@ const pegawaiQueries = {
   `,
   deleteAbsensiByPegawaiId: `
     DELETE FROM absensi WHERE pegawai_id = ?
-  `
+  `,
 };
 
 // 3. MODUL MANAJEMEN JADWAL KERJA (Tabel: jadwal_kerja)
@@ -154,7 +154,7 @@ const jadwalQueries = {
   `,
   delete: `
     DELETE FROM jadwal_kerja WHERE id = ?
-  `
+  `,
 };
 
 // 4. MODUL MANAJEMEN QR CODE (Tabel: qr_pegawai JOIN pegawai)
@@ -191,7 +191,7 @@ const qrQueries = {
     UPDATE qr_pegawai 
     SET token_hash = ?, status = 'AKTIF', updated_at = CURRENT_TIMESTAMP
     WHERE pegawai_id = ?
-  `
+  `,
 };
 
 // 5. MODUL ABSENSI PEGAWAI (Tabel: absensi JOIN pegawai JOIN jadwal_kerja)
@@ -255,6 +255,54 @@ const absensiQueries = {
     UPDATE absensi
     SET status = ?, keterangan = ?, catatan_izin_cuti_id = ?
     WHERE id = ?
+  `,
+  findHarianPegawaiByTanggal: `
+    SELECT 
+      p.id AS pegawai_id,
+      p.kode_pegawai,
+      p.nama,
+      p.jabatan,
+      p.jadwal_kerja_id,
+      j.nama_jadwal,
+      j.hari_kerja,
+      j.jam_masuk AS jam_masuk_jadwal,
+      j.jam_pulang AS jam_pulang_jadwal,
+      j.toleransi_terlambat,
+      a.id AS absensi_id,
+      a.tanggal,
+      a.jam_masuk,
+      a.jam_pulang,
+      a.status,
+      a.keterangan,
+      a.catatan_izin_cuti_id,
+      COALESCE(a.menit_terlambat, 0) AS menit_terlambat
+    FROM pegawai p
+    JOIN jadwal_kerja j ON p.jadwal_kerja_id = j.id
+    LEFT JOIN absensi a ON p.id = a.pegawai_id AND a.tanggal = ?
+    WHERE p.status = 'AKTIF'
+    ORDER BY (a.id IS NULL) DESC, p.nama ASC
+  `,
+  insertManual: `
+    INSERT INTO absensi (pegawai_id, tanggal, jam_masuk, jam_pulang, status, keterangan, menit_terlambat)
+    VALUES (?, ?, ?, ?, ?, ?, ?)
+  `,
+  findPegawaiWithJadwalById: `
+    SELECT 
+      p.id,
+      p.kode_pegawai,
+      p.nama,
+      p.jabatan,
+      p.status,
+      p.jadwal_kerja_id,
+      j.nama_jadwal,
+      j.hari_kerja,
+      j.jam_masuk AS jam_masuk_jadwal,
+      j.jam_pulang AS jam_pulang_jadwal,
+      j.toleransi_terlambat
+    FROM pegawai p
+    LEFT JOIN jadwal_kerja j ON p.jadwal_kerja_id = j.id
+    WHERE p.id = ?
+    LIMIT 1
   `,
 };
 
@@ -347,7 +395,7 @@ const izinCutiQueries = {
   deleteAbsensiTurunan: `
     DELETE FROM absensi
     WHERE catatan_izin_cuti_id = ?
-  `
+  `,
 };
 
 // 7. MODUL REKAP, MONITORING & DASHBOARD
@@ -476,7 +524,7 @@ const reportAndDashboardQueries = {
       AND a.status = 'TERLAMBAT'
       AND a.tanggal BETWEEN ? AND ?
     ORDER BY a.tanggal DESC
-  `
+  `,
 };
 
 // 8. MODUL RIWAYAT ABSENSI (LOG TRANSAKSI HARIAN)
@@ -527,7 +575,7 @@ const riwayatAbsensiQueries = {
     JOIN pegawai p ON a.pegawai_id = p.id
     LEFT JOIN jadwal_kerja jk ON p.jadwal_kerja_id = jk.id
     WHERE a.id = ?
-  `
+  `,
 };
 
 module.exports = {
@@ -538,5 +586,5 @@ module.exports = {
   absensiQueries,
   izinCutiQueries,
   reportAndDashboardQueries,
-  riwayatAbsensiQueries
+  riwayatAbsensiQueries,
 };

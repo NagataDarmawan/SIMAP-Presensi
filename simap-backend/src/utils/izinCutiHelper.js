@@ -1,5 +1,3 @@
-const { getWibDateTime } = require('./absensiHelper');
-
 const DAYS_INDO = ['MINGGU', 'SENIN', 'SELASA', 'RABU', 'KAMIS', 'JUMAT', 'SABTU'];
 const VALID_JENIS_IZIN = ['IZIN', 'SAKIT', 'CUTI'];
 
@@ -49,7 +47,13 @@ const formatDateOnly = (date) => {
   return `${year}-${month}-${day}`;
 };
 
-const getJakartaDate = () => getWibDateTime().tanggal;
+const getJakartaDate = () =>
+  new Intl.DateTimeFormat('en-CA', {
+    timeZone: 'Asia/Jakarta',
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+  }).format(new Date());
 
 const getWorkDates = (startDate, endDate, hariKerjaList) => {
   const start = parseDateOnly(startDate);

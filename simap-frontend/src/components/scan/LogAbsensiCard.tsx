@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { getStatusBadgeClass } from '@/lib/statusBadge';
 import { History, RefreshCw, Loader2 } from 'lucide-react';
 
@@ -40,7 +40,20 @@ export default function LogAbsensiCard({
     }
   };
 
-  const recentLogs = logs?.slice(0, 5) ?? [];
+  // Urutkan berdasarkan aktivitas scan paling terakhir (jam_pulang jika ada, lalu jam_masuk)
+  const recentLogs = useMemo(() => {
+    if (!logs?.length) return [];
+
+    return [...logs]
+      .filter((item) => Boolean(item.jam_pulang || item.jam_masuk))
+      .sort((a, b) => {
+        const lastScanA = a.jam_pulang || a.jam_masuk || '';
+        const lastScanB = b.jam_pulang || b.jam_masuk || '';
+        return lastScanB.localeCompare(lastScanA);
+      })
+      .slice(0, 5);
+  }, [logs]);
+
   const isBusy = isRefreshing || loading;
 
   return (
@@ -93,50 +106,44 @@ export default function LogAbsensiCard({
               Belum ada log absensi hari ini.
             </div>
           ) : (
-            recentLogs.map((item) => (
-              <div
-                key={item.absensi_id}
-                className="flex items-center justify-between gap-2 rounded-lg border border-slate-100 bg-slate-50/70 px-3 py-2 text-xs transition-colors hover:bg-slate-100/60"
-              >
-                <div className="min-w-0 flex-1 pr-2">
-                  <p className="truncate font-semibold text-[var(--text-main)]">
-                    {item.nama_pegawai}
-                  </p>
-                  <p className="truncate text-[11px] text-slate-500">
-                    <span className="font-semibold text-slate-600">{item.kode_pegawai}</span>
-                    {item.jabatan ? ` • ${item.jabatan}` : ''}
-                  </p>
-                </div>
+            recentLogs.map((item) => {
+              const isPulang = Boolean(item.jam_pulang);
+              const lastTime = item.jam_pulang || item.jam_masuk || '--:--';
+              const lastLabel = isPulang ? 'PULANG' : item.status;
+              const badgeClass = isPulang ? 'badge-cuti' : getStatusBadgeClass(item.status);
 
-                <div className="shrink-0 text-right">
-                  <div className="flex items-center justify-end gap-1 text-[11px] font-bold tabular-nums text-slate-700">
-                    <span title="Jam Masuk">{item.jam_masuk || '--:--'}</span>
-                    <span className="text-slate-300">→</span>
-                    <span
-                      title="Jam Pulang"
-                      className={
-                        item.jam_pulang ? 'text-slate-700' : 'font-normal text-slate-400'
-                      }
-                    >
-                      {item.jam_pulang || '--:--'}
-                    </span>
+              return (
+                <div
+                  key={item.absensi_id}
+                  className="flex items-center justify-between gap-2 rounded-lg border border-slate-100 bg-slate-50/70 px-3 py-2 text-xs transition-colors hover:bg-slate-100/60"
+                >
+                  <div className="min-w-0 flex-1 pr-2">
+                    <p className="truncate font-semibold text-[var(--text-main)]">
+                      {item.nama_pegawai}
+                    </p>
+                    <p className="truncate text-[11px] text-slate-500">
+                      <span className="font-semibold text-slate-600">{item.kode_pegawai}</span>
+                      {item.jabatan ? ` • ${item.jabatan}` : ''}
+                    </p>
                   </div>
 
-                  <div className="mt-1 flex items-center justify-end gap-1">
+                  <div className="shrink-0 text-right">
                     <span
-                      className={`inline-block rounded-full px-2 py-0.5 text-[10px] font-bold ${getStatusBadgeClass(item.status)}`}
+                      title={isPulang ? 'Jam Scan Pulang' : 'Jam Scan Masuk'}
+                      className="block text-[11px] font-bold tabular-nums text-slate-700"
                     >
-                      {item.status}
+                      {lastTime}
                     </span>
-                    {item.jam_pulang && (
-                      <span className="badge-cuti inline-block rounded-full px-2 py-0.5 text-[10px] font-bold">
-                        PULANG
-                      </span>
-                    )}
+
+                    <span
+                      className={`mt-1 inline-block rounded-full px-2 py-0.5 text-[10px] font-bold ${badgeClass}`}
+                    >
+                      {lastLabel}
+                    </span>
                   </div>
                 </div>
-              </div>
-            ))
+              );
+            })
           )}
         </div>
       </div>

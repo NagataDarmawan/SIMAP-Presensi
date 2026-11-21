@@ -100,3 +100,26 @@
   .badge-cuti      { background-color: var(--color-cuti-bg);      color: var(--color-cuti);      border: 1px solid var(--color-cuti-border); }
   .badge-alpha     { background-color: var(--color-alpha-bg);     color: var(--color-alpha);     border: 1px solid var(--color-alpha-border); }
 }
+
+/* Custom Subtle Scrollbar untuk Sidebar */
+.sidebar-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(148, 163, 184, 0.25) transparent;
+}
+
+.sidebar-scroll::-webkit-scrollbar {
+  width: 4px;
+}
+
+.sidebar-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.sidebar-scroll::-webkit-scrollbar-thumb {
+  background-color: rgba(148, 163, 184, 0.2);
+  border-radius: 9999px;
+}
+
+.sidebar-scroll:hover::-webkit-scrollbar-thumb {
+  background-color: rgba(148, 163, 184, 0.45);
+}

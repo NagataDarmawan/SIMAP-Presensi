@@ -4,7 +4,7 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import { Html5Qrcode } from 'html5-qrcode';
 import { absensiService } from '@/services/absensi.service';
 import { ScanResultData } from '@/types/absensi';
-import { playSuccessBeep, playErrorBeep, speakText } from '@/utils/audio';
+import { playSuccessBeep, playErrorBeep } from '@/utils/audio';
 
 type JenisAbsensi = 'MASUK' | 'PULANG';
 
@@ -24,22 +24,16 @@ export function useScanAbsensi() {
   const [submitting, setSubmitting] = useState(false);
   const [result, setResult] = useState<ScanResultData | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const [useVoice, setUseVoice] = useState(true);
   const [isCameraActive, setIsCameraActive] = useState(false);
 
   const scannerRef = useRef<Html5Qrcode | null>(null);
   const isScanningLock = useRef(false);
   const jenisAbsensiRef = useRef<JenisAbsensi>('MASUK');
-  const useVoiceRef = useRef(true);
   const scannerElementId = 'interactive-qr-scanner';
 
   useEffect(() => {
     jenisAbsensiRef.current = jenisAbsensi;
   }, [jenisAbsensi]);
-
-  useEffect(() => {
-    useVoiceRef.current = useVoice;
-  }, [useVoice]);
 
   const processAbsen = useCallback(async (rawToken: string) => {
     const cleanToken = rawToken.trim().replace(/[\r\n]/g, '');
@@ -60,21 +54,11 @@ export function useScanAbsensi() {
         setResult(data);
         setKodeQrInput('');
         playSuccessBeep();
-
-        const namaPegawai = data.pegawai || '';
-        const jenisText = currentJenis === 'MASUK' ? 'masuk' : 'pulang';
-        const waktuCatat = data.jam_masuk || data.jam_pulang || '';
-
-        speakText(
-          `${namaPegawai}, absen ${jenisText} berhasil dicatat pada pukul ${waktuCatat}`,
-          useVoiceRef.current
-        );
       }
     } catch (err) {
       const msg = getScanErrorMessage(err);
       setError(msg);
       playErrorBeep();
-      speakText(`Akses ditolak. ${msg}`, useVoiceRef.current);
     } finally {
       setSubmitting(false);
       setTimeout(() => {
@@ -139,8 +123,6 @@ export function useScanAbsensi() {
     submitting,
     result,
     error,
-    useVoice,
-    setUseVoice,
     isCameraActive,
     scannerElementId,
     startCamera,

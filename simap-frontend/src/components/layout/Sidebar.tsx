@@ -8,6 +8,7 @@ import {
   Users,
   QrCode,
   ScanLine,
+  ClipboardCheck,
   History,
   FileSpreadsheet,
   FileCheck,
@@ -44,6 +45,7 @@ const MENU_GROUPS: MenuGroup[] = [
     category: "Presensi",
     items: [
       { name: "Scan Presensi", path: "/scan", icon: ScanLine },
+      { name: "Presensi Harian", path: "/presensi-harian", icon: ClipboardCheck },
       { name: "Riwayat Presensi", path: "/riwayat", icon: History },
       { name: "Izin & Cuti", path: "/izin-cuti", icon: FileSpreadsheet },
     ],
@@ -87,7 +89,7 @@ export default function Sidebar({ isOpen, onLogout }: SidebarProps) {
         </div>
 
         {/* Menu Groups */}
-        <nav className="max-h-[calc(100vh-160px)] space-y-6 overflow-y-auto">
+        <nav className="sidebar-scroll max-h-[calc(100vh-160px)] space-y-6 overflow-y-auto pr-1">
           {MENU_GROUPS.map((group) => (
             <div key={group.category} className="space-y-1">
               {isOpen ? (

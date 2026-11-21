@@ -3,20 +3,18 @@
 import { RiwayatAbsensi } from '@/types/riwayat';
 import { Button } from '@/components/ui/Button';
 import { StatusBadge } from './StatusBadge';
-import { Pencil, X } from 'lucide-react';
+import { X } from 'lucide-react';
 
 type RiwayatDetailItem = RiwayatAbsensi & { keterangan?: string | null };
 
 interface DetailRiwayatModalProps {
   data: RiwayatDetailItem | null;
   onClose: () => void;
-  onEdit: (item: RiwayatAbsensi) => void;
 }
 
 export function DetailRiwayatModal({
   data,
   onClose,
-  onEdit,
 }: DetailRiwayatModalProps) {
   if (!data) return null;
 
@@ -107,17 +105,7 @@ export function DetailRiwayatModal({
         </div>
 
         {/* Footer */}
-        <div className="flex justify-end gap-2 pt-2">
-          <Button
-            type="button"
-            variant="outline"
-            onClick={() => {
-              onClose();
-              onEdit(data);
-            }}
-          >
-            <Pencil className="mr-1.5 h-3.5 w-3.5" /> Koreksi Data
-          </Button>
+        <div className="flex justify-end pt-2">
           <Button type="button" variant="secondary" onClick={onClose}>
             Tutup
           </Button>

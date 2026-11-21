@@ -12,6 +12,8 @@ import {
   CheckCircle2,
   AlertTriangle,
   ScanLine,
+  ClipboardCheck,
+  ArrowUpRight,
 } from 'lucide-react';
 
 export default function DashboardPage() {
@@ -45,6 +47,8 @@ export default function DashboardPage() {
       iconWrapperClass: 'bg-rose-50 text-rose-600',
       Icon: AlertCircle,
       spanClass: 'sm:col-span-2 lg:col-span-1',
+      href: '/presensi-harian',
+      hint: 'Lihat daftar & input manual',
     },
   ];
 
@@ -72,13 +76,21 @@ export default function DashboardPage() {
           </p>
         </div>
 
-        <div className="flex items-center gap-2.5 self-start sm:self-auto">
+        <div className="flex flex-wrap items-center gap-2.5 self-start sm:self-auto">
           <Link
             href="/scan"
             className="flex items-center gap-1.5 rounded-lg bg-[var(--brand)] px-3.5 py-2 text-xs font-semibold text-white shadow-sm transition-colors hover:bg-[var(--brand-hover)]"
           >
             <ScanLine className="h-3.5 w-3.5" />
             <span>Scan Presensi</span>
+          </Link>
+
+          <Link
+            href="/presensi-harian"
+            className="flex items-center gap-1.5 rounded-lg border border-[var(--border-color)] bg-white px-3 py-2 text-xs font-semibold text-slate-700 shadow-sm transition-all hover:bg-slate-50"
+          >
+            <ClipboardCheck className="h-3.5 w-3.5 text-[var(--brand)]" />
+            <span>Presensi Harian</span>
           </Link>
 
           <button
@@ -103,24 +115,50 @@ export default function DashboardPage() {
 
       {/* 1. Stat Cards Ringkasan Pegawai */}
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {pegawaiCards.map(({ label, value, valueClass, iconWrapperClass, Icon, spanClass }) => (
-          <div
-            key={label}
-            className={`flex items-center justify-between rounded-xl border border-[var(--border-color)] bg-white p-5 shadow-sm transition-shadow hover:shadow-md ${spanClass ?? ''}`}
-          >
-            <div>
-              <p className="text-xs font-semibold uppercase tracking-wider text-slate-500">
-                {label}
-              </p>
-              <p className={`mt-2 text-3xl font-extrabold tabular-nums ${valueClass}`}>
-                {loading ? '...' : value}
-              </p>
+        {pegawaiCards.map(({ label, value, valueClass, iconWrapperClass, Icon, spanClass, href, hint }) => {
+          const cardContent = (
+            <>
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-wider text-slate-500">
+                  {label}
+                </p>
+                <p className={`mt-2 text-3xl font-extrabold tabular-nums ${valueClass}`}>
+                  {loading ? '...' : value}
+                </p>
+                {hint && (
+                  <p className="mt-1.5 inline-flex items-center gap-1 text-[11px] font-semibold text-rose-600 group-hover:underline">
+                    <span>{hint}</span>
+                    <ArrowUpRight className="h-3 w-3" />
+                  </p>
+                )}
+              </div>
+              <div className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-xl ${iconWrapperClass}`}>
+                <Icon className="h-6 w-6" />
+              </div>
+            </>
+          );
+
+          if (href) {
+            return (
+              <Link
+                key={label}
+                href={href}
+                className={`group flex items-center justify-between rounded-xl border border-[var(--border-color)] bg-white p-5 shadow-sm transition-all hover:border-rose-200 hover:shadow-md ${spanClass ?? ''}`}
+              >
+                {cardContent}
+              </Link>
+            );
+          }
+
+          return (
+            <div
+              key={label}
+              className={`flex items-center justify-between rounded-xl border border-[var(--border-color)] bg-white p-5 shadow-sm transition-shadow hover:shadow-md ${spanClass ?? ''}`}
+            >
+              {cardContent}
             </div>
-            <div className={`flex h-12 w-12 items-center justify-center rounded-xl ${iconWrapperClass}`}>
-              <Icon className="h-6 w-6" />
-            </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
 
       {/* 2. Stat Cards Ringkasan Presensi Hari Ini + Progress Tingkat Kehadiran */}

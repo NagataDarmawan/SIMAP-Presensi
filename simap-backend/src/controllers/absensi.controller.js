@@ -18,6 +18,51 @@ const scanQR = async (req, res) => {
   }
 };
 
+// GET /api/absensi/harian?tanggal=YYYY-MM-DD&search=
+const getHarian = async (req, res) => {
+  try {
+    const data = await absensiService.getHarianAbsensi(req.query);
+    return res.status(200).json({
+      success: true,
+      message: 'Berhasil mengambil data presensi harian pegawai.',
+      data,
+    });
+  } catch (error) {
+    return res.status(error.status || 400).json({ success: false, message: error.message });
+  }
+};
+
+// POST /api/absensi/manual
+const createManual = async (req, res) => {
+  try {
+    const data = await absensiService.createManualAbsensi(req.body);
+    return res.status(201).json({
+      success: true,
+      message: `Presensi manual (${data.status}) untuk ${data.nama} berhasil disimpan.`,
+      data,
+    });
+  } catch (error) {
+    return res.status(error.status || 400).json({ success: false, message: error.message });
+  }
+};
+
+// POST /api/absensi/auto-alpha
+const autoAlpha = async (req, res) => {
+  try {
+    const data = await absensiService.markAutoAlpha(req.body);
+    return res.status(200).json({
+      success: true,
+      message:
+        data.total_ditandai_alpha > 0
+          ? `${data.total_ditandai_alpha} pegawai berhasil ditandai ALPHA.`
+          : 'Tidak ada pegawai baru yang perlu ditandai ALPHA.',
+      data,
+    });
+  } catch (error) {
+    return res.status(error.status || 400).json({ success: false, message: error.message });
+  }
+};
+
 // GET /api/absensi
 const getHistory = async (req, res) => {
   try {
@@ -54,6 +99,9 @@ const correct = async (req, res) => {
 
 module.exports = {
   scanQR,
+  getHarian,
+  createManual,
+  autoAlpha,
   getHistory,
   getById,
   correct,

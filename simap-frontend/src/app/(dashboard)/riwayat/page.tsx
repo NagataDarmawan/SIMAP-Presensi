@@ -8,7 +8,6 @@ import { Filter } from '@/components/ui/Filter';
 import { ToastNotification } from '@/components/ui/ToastNotification';
 import { RiwayatTable } from '@/components/riwayat/RiwayatTable';
 import { DetailRiwayatModal } from '@/components/riwayat/DetailRiwayatModal';
-import { KoreksiRiwayatModal } from '@/components/riwayat/KoreksiRiwayatModal';
 
 const STATUS_FILTER_OPTIONS = [
   { label: 'Semua Status', value: '' },
@@ -31,49 +30,35 @@ export default function RiwayatAbsensiPage() {
     riwayatData,
     fetchRiwayat,
     handleFilterChange,
-    updateKoreksiAbsensi,
   } = useRiwayat();
 
   const [selectedDetail, setSelectedDetail] = useState<RiwayatAbsensi | null>(null);
-  const [editingItem, setEditingItem] = useState<RiwayatAbsensi | null>(null);
-  const [toast, setToast] = useState<{
-    message: string | null;
-    type: 'success' | 'error';
-  }>({ message: null, type: 'success' });
+  const [dismissedError, setDismissedError] = useState<string | null>(null);
 
   useEffect(() => {
     void fetchRiwayat(filter);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const closeToast = useCallback(() => {
-    setToast((prev) => ({ ...prev, message: null }));
-  }, []);
+  const handleCloseToast = useCallback(() => {
+    setDismissedError(error);
+  }, [error]);
 
-  const handleKoreksiSuccess = useCallback(
-    (msg: string) => {
-      setToast({ message: msg, type: 'success' });
-      void fetchRiwayat(filter);
-    },
-    [fetchRiwayat, filter]
-  );
-
-  const activeToastMessage = toast.message ?? error;
-  const activeToastType = toast.message ? toast.type : 'error';
+  const visibleError = error && error !== dismissedError ? error : null;
 
   return (
     <div className="space-y-6">
       <ToastNotification
-        message={activeToastMessage}
-        type={activeToastType}
-        onClose={closeToast}
+        message={visibleError}
+        type="error"
+        onClose={handleCloseToast}
       />
 
       {/* Header */}
       <div>
-        <h1 className="text-2xl font-bold text-[var(--text-main)]">Riwayat Absensi</h1>
+        <h1 className="text-2xl font-bold text-[var(--text-main)]">Riwayat Presensi</h1>
         <p className="text-sm text-[var(--text-muted)]">
-          Log transaksi harian catatan scan presensi jam masuk dan jam pulang seluruh pegawai
+          Arsip log transaksi harian catatan presensi jam masuk dan jam pulang seluruh pegawai
         </p>
       </div>
 
@@ -111,11 +96,10 @@ export default function RiwayatAbsensiPage() {
         </div>
       </div>
 
-      {/* Tabel Riwayat Absensi */}
+      {/* Tabel Riwayat Absensi (Read-Only) */}
       <RiwayatTable
         data={riwayatData}
         loading={loading}
-        onEdit={setEditingItem}
         onViewDetail={setSelectedDetail}
       />
 
@@ -123,16 +107,6 @@ export default function RiwayatAbsensiPage() {
       <DetailRiwayatModal
         data={selectedDetail}
         onClose={() => setSelectedDetail(null)}
-        onEdit={setEditingItem}
-      />
-
-      {/* Modal Koreksi Presensi */}
-      <KoreksiRiwayatModal
-        item={editingItem}
-        onClose={() => setEditingItem(null)}
-        onSubmitKoreksi={updateKoreksiAbsensi}
-        onSuccess={handleKoreksiSuccess}
-        onError={(msg) => setToast({ message: msg, type: 'error' })}
       />
     </div>
   );
