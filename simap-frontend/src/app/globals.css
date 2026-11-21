@@ -1,0 +1,102 @@
+@import "tailwindcss";
+
+/* =====================================================
+   SIMAP — Design Token (Ubah warna utama cukup di sini)
+   ===================================================== */
+:root {
+  /* --- 1. Brand Color (Ubah --brand untuk ganti tema aplikasi) --- */
+  --brand: #2563eb;
+  --brand-hover: color-mix(in srgb, var(--brand) 85%, #000);
+  --brand-light: color-mix(in srgb, var(--brand) 10%, #fff);
+  --brand-dark: color-mix(in srgb, var(--brand) 38%, #0f172a);
+  --brand-darker: color-mix(in srgb, var(--brand) 28%, #090d16);
+
+  /* --- 2. Semantic Status Colors --- */
+  --color-hadir: #059669;
+  --color-hadir-bg: #ecfdf5;
+  --color-hadir-border: #a7f3d0;
+
+  --color-terlambat: #d97706;
+  --color-terlambat-bg: #fffbeb;
+  --color-terlambat-border: #fde68a;
+
+  --color-izin: #4f46e5;
+  --color-izin-bg: #eef2ff;
+  --color-izin-border: #c7d2fe;
+
+  --color-sakit: #e11d48;
+  --color-sakit-bg: #fff1f2;
+  --color-sakit-border: #fecdd3;
+
+  --color-cuti: #7c3aed;
+  --color-cuti-bg: #f5f3ff;
+  --color-cuti-border: #ddd6fe;
+
+  --color-alpha: #dc2626;
+  --color-alpha-bg: #fef2f2;
+  --color-alpha-border: #fecaca;
+
+  /* --- 3. UI Foundation --- */
+  --bg-main: #f8fafc;
+  --bg-card: #ffffff;
+  --border-color: #e2e8f0;
+  --text-main: #0f172a;
+  --text-muted: #475569;
+
+  /* --- 4. Input Focus Ring --- */
+  --focus-ring: var(--brand);
+  --focus-ring-light: color-mix(in srgb, var(--brand) 20%, transparent);
+}
+
+/* Menghubungkan token ke class Tailwind (bg-primary, text-danger, dll.) */
+@theme inline {
+  --color-primary: var(--brand);
+  --color-primary-hover: var(--brand-hover);
+  --color-primary-light: var(--brand-light);
+
+  --color-success: #10b981;
+  --color-warning: #f59e0b;
+  --color-danger: #ef4444;
+  --color-danger-hover: #dc2626;
+
+  --color-bg-main: var(--bg-main);
+  --color-bg-card: var(--bg-card);
+  --color-border: var(--border-color);
+  --color-text-main: var(--text-main);
+  --color-text-muted: var(--text-muted);
+}
+
+/* =====================================================
+   SIMAP — Reusable Utility Classes
+   ===================================================== */
+@layer utilities {
+  /* Sidebar & Navigation */
+  .simap-sidebar           { background-color: var(--brand-dark); color: #fff; }
+  .simap-sidebar-title     { color: color-mix(in srgb, var(--brand) 70%, #fff); }
+  .simap-sidebar-icon      { background-color: var(--brand); color: #fff; }
+  .simap-nav-active        { background-color: var(--brand); color: #fff; }
+  .simap-nav-inactive      { color: #cbd5e1; }
+  .simap-nav-inactive:hover { background-color: var(--brand-darker); color: #fff; }
+
+  /* Avatar & Interactive Elements */
+  .simap-avatar            { background-color: var(--brand); color: #fff; }
+  .link-brand              { color: var(--brand); }
+  .link-brand:hover        { text-decoration: underline; }
+
+  .btn-filter              { background-color: var(--brand-dark); color: #fff; }
+  .btn-filter:hover        { background-color: var(--brand-darker); }
+
+  .simap-input-focus:focus {
+    outline: none;
+    border-color: var(--focus-ring);
+    box-shadow: 0 0 0 2px var(--focus-ring-light);
+  }
+
+  /* Semantic Status Badges */
+  .badge-hadir     { background-color: var(--color-hadir-bg);     color: var(--color-hadir);     border: 1px solid var(--color-hadir-border); }
+  .badge-terlambat { background-color: var(--color-terlambat-bg); color: var(--color-terlambat); border: 1px solid var(--color-terlambat-border); }
+  .badge-izin      { background-color: var(--color-izin-bg);      color: var(--color-izin);      border: 1px solid var(--color-izin-border); }
+  .badge-sakit     { background-color: var(--color-sakit-bg);     color: var(--color-sakit);     border: 1px solid var(--color-sakit-border); }
+  .badge-cuti      { background-color: var(--color-cuti-bg);      color: var(--color-cuti);      border: 1px solid var(--color-cuti-border); }
+  .badge-alpha     { background-color: var(--color-alpha-bg);     color: var(--color-alpha);     border: 1px solid var(--color-alpha-border); }
+}

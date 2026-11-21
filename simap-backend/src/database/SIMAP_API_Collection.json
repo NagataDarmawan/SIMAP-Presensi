@@ -1,0 +1,193 @@
+{
+  "info": {
+    "name": "SIMAP API Backend",
+    "description": "Collection API SIMAP Modul 1 - Modul 9",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Modul 1 - Auth",
+      "item": [
+        {
+          "name": "Login Admin",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"admin\",\n  \"password\": \"password123\"\n}"
+            },
+            "url": "http://localhost:5000/api/auth/login"
+          }
+        },
+        {
+          "name": "Get Profile Admin",
+          "request": {
+            "method": "GET",
+            "url": "http://localhost:5000/api/auth/me"
+          }
+        },
+        {
+          "name": "Logout Admin",
+          "request": {
+            "method": "POST",
+            "url": "http://localhost:5000/api/auth/logout"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Modul 2 - Jadwal Kerja",
+      "item": [
+        {
+          "name": "Get All Jadwal Kerja",
+          "request": {
+            "method": "GET",
+            "url": "http://localhost:5000/api/jadwal"
+          }
+        },
+        {
+          "name": "Create Jadwal Kerja",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nama_jadwal\": \"Non-Shift Regular\",\n  \"jam_masuk\": \"08:00:00\",\n  \"jam_pulang\": \"17:00:00\",\n  \"toleransi_terlambat_menit\": 15,\n  \"hari_kerja\": \"SENIN,SELASA,RABU,KAMIS,JUMAT\"\n}"
+            },
+            "url": "http://localhost:5000/api/jadwal"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Modul 3 - Pegawai",
+      "item": [
+        {
+          "name": "Get All Pegawai",
+          "request": {
+            "method": "GET",
+            "url": "http://localhost:5000/api/pegawai"
+          }
+        },
+        {
+          "name": "Create Pegawai",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"kode_pegawai\": \"PEG-001\",\n  \"nama\": \"Budi Santoso\",\n  \"jenis_kelamin\": \"Laki-laki\",\n  \"alamat\": \"Jl. Merdeka No. 10\",\n  \"no_telepon\": \"081234567890\",\n  \"jabatan\": \"Staff IT\",\n  \"tanggal_masuk\": \"2026-01-15\",\n  \"jadwal_kerja_id\": 1\n}"
+            },
+            "url": "http://localhost:5000/api/pegawai"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Modul 4 - QR Code",
+      "item": [
+        {
+          "name": "Generate QR Code",
+          "request": {
+            "method": "POST",
+            "url": "http://localhost:5000/api/qr/1/generate"
+          }
+        },
+        {
+          "name": "Get All QR Code",
+          "request": {
+            "method": "GET",
+            "url": "http://localhost:5000/api/qr"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Modul 5 - Scan Absensi",
+      "item": [
+        {
+          "name": "Scan Absen Masuk",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"token\": \"a4923aa923c7c523be1ee58799dd5b4eb85b4dbee2ff65eae331c38cb36f9f1c\",\n  \"jenis\": \"MASUK\"\n}"
+            },
+            "url": "http://localhost:5000/api/absensi/scan"
+          }
+        },
+        {
+          "name": "Scan Absen Pulang",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"token\": \"a4923aa923c7c523be1ee58799dd5b4eb85b4dbee2ff65eae331c38cb36f9f1c\",\n  \"jenis\": \"PULANG\"\n}"
+            },
+            "url": "http://localhost:5000/api/absensi/scan"
+          }
+        },
+        {
+          "name": "Get Riwayat Absensi",
+          "request": {
+            "method": "GET",
+            "url": "http://localhost:5000/api/absensi"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Modul 6 - Izin & Cuti",
+      "item": [
+        {
+          "name": "Create Izin / Cuti",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"pegawai_id\": 1,\n  \"jenis\": \"CUTI\",\n  \"tanggal_mulai\": \"2026-11-02\",\n  \"tanggal_selesai\": \"2026-11-03\",\n  \"alasan\": \"Cuti Tahunan\"\n}"
+            },
+            "url": "http://localhost:5000/api/izin-cuti"
+          }
+        },
+        {
+          "name": "Get All Izin / Cuti",
+          "request": {
+            "method": "GET",
+            "url": "http://localhost:5000/api/izin-cuti"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Modul 7, 8, 9 - Laporan & Dashboard",
+      "item": [
+        {
+          "name": "Rekap Kehadiran",
+          "request": {
+            "method": "GET",
+            "url": "http://localhost:5000/api/rekap?start_date=2026-10-01&end_date=2026-11-30"
+          }
+        },
+        {
+          "name": "Monitoring Kedisiplinan",
+          "request": {
+            "method": "GET",
+            "url": "http://localhost:5000/api/monitoring?start_date=2026-10-01&end_date=2026-11-30"
+          }
+        },
+        {
+          "name": "Dashboard Ringkasan",
+          "request": {
+            "method": "GET",
+            "url": "http://localhost:5000/api/dashboard"
+          }
+        }
+      ]
+    }
+  ]
+}
